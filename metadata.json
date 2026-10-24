@@ -1,0 +1,6 @@
+{
+  "name": "Vav-Tharad District Grievance & Citizen Portal",
+  "description": "Official citizen grievance redressal and public service platform for Vav-Tharad district, Government of Gujarat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
