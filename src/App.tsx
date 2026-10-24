@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Search,
   ArrowRight,
   FileText,
   LayoutGrid,
-  ChevronRight
+  ChevronRight,
+  Terminal
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -13,10 +14,11 @@ import { ComplaintModal } from './components/ComplaintModal';
 import { StatusTrackerModal } from './components/StatusTrackerModal';
 import { ServiceDetailModal } from './components/ServiceDetailModal';
 import { AuthModal } from './components/AuthModal';
+import { NextJsModal } from './components/NextJsModal';
 import { EducationPage } from './components/EducationPage';
 import { DirectoryPage, DirectoryType, SchoolItem, SCHOOLS_DATA } from './components/DirectoryPage';
 import { SchoolDetailPage } from './components/SchoolDetailPage';
-import { Complaint, DepartmentId } from './types';
+import { Complaint, DepartmentId, UserSession } from './types';
 import { INITIAL_COMPLAINTS } from './data/mockData';
 
 export default function App() {
@@ -25,6 +27,41 @@ export default function App() {
   const [selectedSchool, setSelectedSchool] = useState<SchoolItem>(SCHOOLS_DATA[0]);
   const [isGujarati, setIsGujarati] = useState<boolean>(false);
   const [complaints, setComplaints] = useState<Complaint[]>(INITIAL_COMPLAINTS);
+  const [isNextJsModalOpen, setIsNextJsModalOpen] = useState<boolean>(false);
+
+  // User session state
+  const [currentUser, setCurrentUser] = useState<UserSession | null>(() => {
+    try {
+      const saved = localStorage.getItem('vav_tharad_user_session');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.isLoggedIn) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  });
+
+  // Auth Modal state: When landing, mandatory login/signup popup is shown first if not logged in!
+  const [authModal, setAuthModal] = useState<{
+    open: boolean;
+    mode: 'login' | 'signup' | 'signin';
+    isMandatory: boolean;
+  }>(() => {
+    try {
+      const saved = localStorage.getItem('vav_tharad_user_session');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.isLoggedIn) {
+          return { open: false, mode: 'login', isMandatory: false };
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return { open: true, mode: 'login', isMandatory: true };
+  });
 
   // Search input state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -38,10 +75,26 @@ export default function App() {
 
   const [activeServiceModal, setActiveServiceModal] = useState<DepartmentId | null>(null);
 
-  const [authModal, setAuthModal] = useState<{ open: boolean; mode: 'login' | 'signin' }>({
-    open: false,
-    mode: 'login'
-  });
+  const handleAuthSuccess = (session: UserSession) => {
+    setCurrentUser(session);
+    try {
+      localStorage.setItem('vav_tharad_user_session', JSON.stringify(session));
+    } catch (e) {
+      console.error(e);
+    }
+    setAuthModal({ open: false, mode: 'login', isMandatory: false });
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem('vav_tharad_user_session');
+    } catch (e) {
+      console.error(e);
+    }
+    // Re-prompt login/signup popup immediately upon logout
+    setAuthModal({ open: true, mode: 'login', isMandatory: true });
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +111,57 @@ export default function App() {
     setComplaints((prev) => [newComplaint, ...prev]);
   };
 
+  // Next.js App Router URL path synchronization via hash routing
+  useEffect(() => {
+    const handleHashSync = () => {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (!hash || hash === '/') {
+        setCurrentView('home');
+      } else if (hash === '/education') {
+        setCurrentView('education');
+      } else if (hash === '/education/schools') {
+        setDirectoryType('schools');
+        setCurrentView('directory');
+      } else if (hash.startsWith('/education/schools/')) {
+        const id = hash.replace('/education/schools/', '');
+        const found = SCHOOLS_DATA.find((s) => s.id === id);
+        if (found) {
+          setSelectedSchool(found);
+          setCurrentView('school-detail');
+        } else {
+          setDirectoryType('schools');
+          setCurrentView('directory');
+        }
+      } else if (hash === '/education/teachers') {
+        setDirectoryType('teachers');
+        setCurrentView('directory');
+      } else if (hash === '/education/students') {
+        setDirectoryType('students');
+        setCurrentView('directory');
+      }
+    };
+
+    handleHashSync();
+    window.addEventListener('hashchange', handleHashSync);
+    return () => window.removeEventListener('hashchange', handleHashSync);
+  }, []);
+
+  const navigateTo = (view: 'home' | 'education' | 'directory' | 'school-detail', dirType?: DirectoryType, school?: SchoolItem) => {
+    setCurrentView(view);
+    if (dirType) setDirectoryType(dirType);
+    if (school) setSelectedSchool(school);
+
+    let newHash = '#/';
+    if (view === 'education') newHash = '#/education';
+    else if (view === 'directory') newHash = `#/education/${dirType || directoryType}`;
+    else if (view === 'school-detail') newHash = `#/education/schools/${(school || selectedSchool).id}`;
+
+    if (window.location.hash !== newHash) {
+      window.location.hash = newHash;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleExploreServicesClick = () => {
     const el = document.getElementById('explore-services-section');
     if (el) {
@@ -67,24 +171,25 @@ export default function App() {
 
   const handleServiceClick = (deptId: DepartmentId) => {
     if (deptId === 'education') {
-      setCurrentView('education');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navigateTo('education');
     } else {
       setActiveServiceModal(deptId);
     }
   };
 
   const handleNavigateToDirectory = (type: DirectoryType) => {
-    setDirectoryType(type);
-    setCurrentView('directory');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('directory', type);
   };
 
   const handleSelectSchool = (school: SchoolItem) => {
-    setSelectedSchool(school);
-    setCurrentView('school-detail');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateTo('school-detail', undefined, school);
   };
+
+  const currentNextJsRoute = 
+    currentView === 'home' ? '/' :
+    currentView === 'education' ? '/education' :
+    currentView === 'directory' ? `/education/${directoryType}` :
+    `/education/schools/${selectedSchool.id}`;
 
   // If in 'school-detail' view (Exact match of image_04def315.png)
   if (currentView === 'school-detail') {
@@ -93,25 +198,17 @@ export default function App() {
         <SchoolDetailPage
           school={selectedSchool}
           allSchools={SCHOOLS_DATA}
-          onSelectSchool={(s) => setSelectedSchool(s)}
-          onBackToHome={() => {
-            setCurrentView('home');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          onBackToEducation={() => {
-            setCurrentView('education');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          onBackToSchools={() => {
-            setDirectoryType('schools');
-            setCurrentView('directory');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
+          onSelectSchool={(s) => navigateTo('school-detail', undefined, s)}
+          onBackToHome={() => navigateTo('home')}
+          onBackToEducation={() => navigateTo('education')}
+          onBackToSchools={() => navigateTo('directory', 'schools')}
           onOpenComplaints={() => {
             setTrackerSearchId('');
             setIsTrackerModalOpen(true);
           }}
           onFileComplaint={() => handleOpenComplaint('education')}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
 
         {/* Global Modals */}
@@ -121,6 +218,7 @@ export default function App() {
           onComplaintSubmitted={handleComplaintSubmitted}
           initialDepartmentId={selectedDeptForComplaint}
           isGujarati={isGujarati}
+          currentUser={currentUser}
         />
 
         <StatusTrackerModal
@@ -130,6 +228,35 @@ export default function App() {
           initialSearchQuery={trackerSearchId}
           isGujarati={isGujarati}
         />
+
+        <AuthModal
+          isOpen={authModal.open}
+          mode={authModal.mode}
+          isMandatory={authModal.isMandatory}
+          onClose={() => setAuthModal((prev) => ({ ...prev, open: false }))}
+          onSuccess={handleAuthSuccess}
+          isGujarati={isGujarati}
+        />
+
+        <NextJsModal
+          isOpen={isNextJsModalOpen}
+          onClose={() => setIsNextJsModalOpen(false)}
+          isGujarati={isGujarati}
+        />
+
+        {/* Floating Next.js Route Badge */}
+        <button
+          type="button"
+          onClick={() => setIsNextJsModalOpen(true)}
+          className="fixed bottom-4 right-4 z-40 hidden sm:flex items-center gap-2 bg-[#0B2545]/95 hover:bg-[#0B2545] text-white px-3.5 py-2 rounded-2xl shadow-2xl border border-blue-400/40 backdrop-blur-md text-xs transition-all active:scale-95 cursor-pointer"
+          title="Inspect Next.js 15 App Router Architecture"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="font-extrabold text-amber-300">Next.js 15 Route:</span>
+          <span className="font-mono text-[11px] text-blue-100 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+            {currentNextJsRoute}
+          </span>
+        </button>
       </>
     );
   }
@@ -140,20 +267,16 @@ export default function App() {
       <>
         <DirectoryPage
           initialType={directoryType}
-          onBackToHome={() => {
-            setCurrentView('home');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          onBackToEducation={() => {
-            setCurrentView('education');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
+          onBackToHome={() => navigateTo('home')}
+          onBackToEducation={() => navigateTo('education')}
           onOpenComplaints={() => {
             setTrackerSearchId('');
             setIsTrackerModalOpen(true);
           }}
           onFileComplaint={(deptId) => handleOpenComplaint((deptId as DepartmentId) || 'education')}
           onSelectSchool={handleSelectSchool}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
 
         {/* Global Modals */}
@@ -163,6 +286,7 @@ export default function App() {
           onComplaintSubmitted={handleComplaintSubmitted}
           initialDepartmentId={selectedDeptForComplaint}
           isGujarati={isGujarati}
+          currentUser={currentUser}
         />
 
         <StatusTrackerModal
@@ -172,6 +296,35 @@ export default function App() {
           initialSearchQuery={trackerSearchId}
           isGujarati={isGujarati}
         />
+
+        <AuthModal
+          isOpen={authModal.open}
+          mode={authModal.mode}
+          isMandatory={authModal.isMandatory}
+          onClose={() => setAuthModal((prev) => ({ ...prev, open: false }))}
+          onSuccess={handleAuthSuccess}
+          isGujarati={isGujarati}
+        />
+
+        <NextJsModal
+          isOpen={isNextJsModalOpen}
+          onClose={() => setIsNextJsModalOpen(false)}
+          isGujarati={isGujarati}
+        />
+
+        {/* Floating Next.js Route Badge */}
+        <button
+          type="button"
+          onClick={() => setIsNextJsModalOpen(true)}
+          className="fixed bottom-4 right-4 z-40 hidden sm:flex items-center gap-2 bg-[#0B2545]/95 hover:bg-[#0B2545] text-white px-3.5 py-2 rounded-2xl shadow-2xl border border-blue-400/40 backdrop-blur-md text-xs transition-all active:scale-95 cursor-pointer"
+          title="Inspect Next.js 15 App Router Architecture"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="font-extrabold text-amber-300">Next.js 15 Route:</span>
+          <span className="font-mono text-[11px] text-blue-100 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+            {currentNextJsRoute}
+          </span>
+        </button>
       </>
     );
   }
@@ -181,16 +334,15 @@ export default function App() {
     return (
       <>
         <EducationPage
-          onBackToHome={() => {
-            setCurrentView('home');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
+          onBackToHome={() => navigateTo('home')}
           onOpenComplaints={() => {
             setTrackerSearchId('');
             setIsTrackerModalOpen(true);
           }}
           onFileEducationComplaint={() => handleOpenComplaint('education')}
           onNavigateToDirectory={handleNavigateToDirectory}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
 
         {/* Global Modals accessible from Education Page */}
@@ -200,6 +352,7 @@ export default function App() {
           onComplaintSubmitted={handleComplaintSubmitted}
           initialDepartmentId={selectedDeptForComplaint}
           isGujarati={isGujarati}
+          currentUser={currentUser}
         />
 
         <StatusTrackerModal
@@ -209,6 +362,35 @@ export default function App() {
           initialSearchQuery={trackerSearchId}
           isGujarati={isGujarati}
         />
+
+        <AuthModal
+          isOpen={authModal.open}
+          mode={authModal.mode}
+          isMandatory={authModal.isMandatory}
+          onClose={() => setAuthModal((prev) => ({ ...prev, open: false }))}
+          onSuccess={handleAuthSuccess}
+          isGujarati={isGujarati}
+        />
+
+        <NextJsModal
+          isOpen={isNextJsModalOpen}
+          onClose={() => setIsNextJsModalOpen(false)}
+          isGujarati={isGujarati}
+        />
+
+        {/* Floating Next.js Route Badge */}
+        <button
+          type="button"
+          onClick={() => setIsNextJsModalOpen(true)}
+          className="fixed bottom-4 right-4 z-40 hidden sm:flex items-center gap-2 bg-[#0B2545]/95 hover:bg-[#0B2545] text-white px-3.5 py-2 rounded-2xl shadow-2xl border border-blue-400/40 backdrop-blur-md text-xs transition-all active:scale-95 cursor-pointer"
+          title="Inspect Next.js 15 App Router Architecture"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="font-extrabold text-amber-300">Next.js 15 Route:</span>
+          <span className="font-mono text-[11px] text-blue-100 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+            {currentNextJsRoute}
+          </span>
+        </button>
       </>
     );
   }
@@ -220,7 +402,11 @@ export default function App() {
       <Header
         isGujarati={isGujarati}
         onToggleLanguage={() => setIsGujarati((prev) => !prev)}
-        onOpenAuth={(mode) => setAuthModal({ open: true, mode })}
+        onOpenAuth={(mode) => setAuthModal({ open: true, mode, isMandatory: false })}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        onOpenComplaints={() => setIsTrackerModalOpen(true)}
+        onOpenNextJsModal={() => setIsNextJsModalOpen(true)}
       />
 
       {/* 2. Main Hero & Services Split Grid */}
@@ -424,6 +610,7 @@ export default function App() {
         onComplaintSubmitted={handleComplaintSubmitted}
         initialDepartmentId={selectedDeptForComplaint}
         isGujarati={isGujarati}
+        currentUser={currentUser}
       />
 
       <StatusTrackerModal
@@ -444,9 +631,31 @@ export default function App() {
       <AuthModal
         isOpen={authModal.open}
         mode={authModal.mode}
-        onClose={() => setAuthModal({ open: false, mode: 'login' })}
+        isMandatory={authModal.isMandatory}
+        onClose={() => setAuthModal((prev) => ({ ...prev, open: false }))}
+        onSuccess={handleAuthSuccess}
         isGujarati={isGujarati}
       />
+
+      <NextJsModal
+        isOpen={isNextJsModalOpen}
+        onClose={() => setIsNextJsModalOpen(false)}
+        isGujarati={isGujarati}
+      />
+
+      {/* Floating Next.js Route Badge */}
+      <button
+        type="button"
+        onClick={() => setIsNextJsModalOpen(true)}
+        className="fixed bottom-4 right-4 z-40 hidden sm:flex items-center gap-2 bg-[#0B2545]/95 hover:bg-[#0B2545] text-white px-3.5 py-2 rounded-2xl shadow-2xl border border-blue-400/40 backdrop-blur-md text-xs transition-all active:scale-95 cursor-pointer"
+        title="Inspect Next.js 15 App Router Architecture"
+      >
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span className="font-extrabold text-amber-300">Next.js 15 Route:</span>
+        <span className="font-mono text-[11px] text-blue-100 bg-white/10 px-2 py-0.5 rounded-lg border border-white/10">
+          {currentNextJsRoute}
+        </span>
+      </button>
     </div>
   );
 }

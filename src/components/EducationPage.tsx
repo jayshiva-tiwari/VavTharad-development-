@@ -14,23 +14,29 @@ import {
   X,
   Sparkles,
   Phone,
-  Mail
+  Mail,
+  LogOut
 } from 'lucide-react';
 import { EmblemLogo } from './EmblemLogo';
 import { DirectoryType } from './DirectoryPage';
+import { UserSession } from '../types';
 
 interface EducationPageProps {
   onBackToHome: () => void;
   onOpenComplaints: () => void;
   onFileEducationComplaint: () => void;
   onNavigateToDirectory: (type: DirectoryType) => void;
+  currentUser?: UserSession | null;
+  onLogout?: () => void;
 }
 
 export function EducationPage({
   onBackToHome,
   onOpenComplaints,
   onFileEducationComplaint,
-  onNavigateToDirectory
+  onNavigateToDirectory,
+  currentUser,
+  onLogout
 }: EducationPageProps) {
   // State for user profile dropdown
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -173,10 +179,12 @@ export function EducationPage({
               >
                 <img
                   src="/assets/education/shiva_avatar.png"
-                  alt="Shiva"
+                  alt="Profile"
                   className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 ring-slate-200"
                 />
-                <span className="text-xs sm:text-sm font-bold text-slate-800">Shiva</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-800">
+                  {currentUser?.name ? currentUser.name.split(' ')[0] : 'Shiva'}
+                </span>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
               </button>
 
@@ -186,12 +194,16 @@ export function EducationPage({
                   <div className="px-3 py-2.5 border-b border-stone-100 flex items-center gap-2.5">
                     <img
                       src="/assets/education/shiva_avatar.png"
-                      alt="Shiva"
+                      alt="Profile"
                       className="w-9 h-9 rounded-full object-cover"
                     />
-                    <div>
-                      <p className="font-bold text-slate-900 text-sm">Shiva Tiwari</p>
-                      <p className="text-[11px] text-slate-500">Citizen • Vav-Tharad</p>
+                    <div className="min-w-0">
+                      <p className="font-bold text-slate-900 text-sm truncate">
+                        {currentUser?.name || 'Shiva Tiwari'}
+                      </p>
+                      <p className="text-[11px] text-slate-500 truncate">
+                        {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
+                      </p>
                     </div>
                   </div>
                   <div className="py-1">
@@ -201,7 +213,7 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onOpenComplaints();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Track Active Grievances</span>
                       <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
@@ -214,7 +226,7 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onNavigateToDirectory('schools');
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Browse Schools (15)</span>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -225,7 +237,7 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onNavigateToDirectory('teachers');
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Teacher Directory (40+)</span>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -236,7 +248,7 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onNavigateToDirectory('students');
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Student Enrollment (5,000+)</span>
                       <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
@@ -247,7 +259,7 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onFileEducationComplaint();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>File School Grievance</span>
                       <Sparkles className="w-3.5 h-3.5 text-orange-500" />
@@ -258,10 +270,23 @@ export function EducationPage({
                         setShowProfileMenu(false);
                         onBackToHome();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
                     >
                       Return to Main District Portal
                     </button>
+                    {onLogout && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onLogout();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 font-bold flex items-center justify-between cursor-pointer mt-1 border-t border-stone-100 pt-2"
+                      >
+                        <span>Log Out</span>
+                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                      </button>
+                    )}
                   </div>
                 </div>
               )}

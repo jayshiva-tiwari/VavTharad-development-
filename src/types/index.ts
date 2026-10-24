@@ -62,3 +62,12 @@ export interface Complaint {
   attachmentName?: string;
   resolutionRemarks?: string;
 }
+
+export interface UserSession {
+  name: string;
+  mobile: string;
+  role: 'citizen' | 'officer';
+  taluka?: string;
+  village?: string;
+  isLoggedIn: boolean;
+}

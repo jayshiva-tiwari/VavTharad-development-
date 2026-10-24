@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle, Upload, AlertCircle, FileText, ArrowRight, ArrowLeft, Copy, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Complaint, DepartmentId, TalukaName } from '../types';
+import { Complaint, DepartmentId, TalukaName, UserSession } from '../types';
 import { DEPARTMENT_SERVICES, TALUKAS } from '../data/mockData';
 
 interface ComplaintModalProps {
@@ -10,6 +10,7 @@ interface ComplaintModalProps {
   onComplaintSubmitted: (complaint: Complaint) => void;
   initialDepartmentId?: DepartmentId;
   isGujarati: boolean;
+  currentUser?: UserSession | null;
 }
 
 export function ComplaintModal({
@@ -17,7 +18,8 @@ export function ComplaintModal({
   onClose,
   onComplaintSubmitted,
   initialDepartmentId,
-  isGujarati
+  isGujarati,
+  currentUser
 }: ComplaintModalProps) {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [departmentId, setDepartmentId] = useState<DepartmentId>(initialDepartmentId || 'drinking-water');
@@ -39,11 +41,18 @@ export function ComplaintModal({
       if (initialDepartmentId) {
         setDepartmentId(initialDepartmentId);
       }
+      if (currentUser) {
+        setCitizenName(currentUser.name || 'Shiva Tiwari');
+        setCitizenMobile(currentUser.mobile || '9825012345');
+        if (currentUser.taluka && ['Tharad', 'Vav', 'Suigam', 'Bhabhar'].includes(currentUser.taluka)) {
+          setTaluka(currentUser.taluka as TalukaName);
+        }
+      }
       setStep(1);
       setCreatedComplaint(null);
       setErrors({});
     }
-  }, [isOpen, initialDepartmentId]);
+  }, [isOpen, initialDepartmentId, currentUser]);
 
   if (!isOpen) return null;
 

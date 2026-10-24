@@ -15,9 +15,11 @@ import {
   Sparkles,
   Phone,
   Mail,
-  Home
+  Home,
+  LogOut
 } from 'lucide-react';
 import { EmblemLogo } from './EmblemLogo';
+import { UserSession } from '../types';
 
 export interface SchoolDetailData {
   id: string;
@@ -44,6 +46,8 @@ interface SchoolDetailPageProps {
   onBackToSchools: () => void;
   onOpenComplaints: () => void;
   onFileComplaint: (schoolName: string) => void;
+  currentUser?: UserSession | null;
+  onLogout?: () => void;
 }
 
 export function SchoolDetailPage({
@@ -54,7 +58,9 @@ export function SchoolDetailPage({
   onBackToEducation,
   onBackToSchools,
   onOpenComplaints,
-  onFileComplaint
+  onFileComplaint,
+  currentUser,
+  onLogout
 }: SchoolDetailPageProps) {
   const [searchInput, setSearchInput] = useState(school.name);
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -112,9 +118,11 @@ export function SchoolDetailPage({
                 className="flex items-center gap-1.5 sm:gap-2 pl-1 pr-2 sm:pr-2.5 py-1 bg-white hover:bg-stone-50 border border-slate-200 rounded-full transition-all shadow-xs cursor-pointer focus:outline-none active:scale-95"
               >
                 <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs sm:text-sm ring-1 ring-blue-200">
-                  S
+                  {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'S'}
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-slate-800 hidden xs:inline">Shiva</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-800 hidden xs:inline">
+                  {currentUser?.name ? currentUser.name.split(' ')[0] : 'Shiva'}
+                </span>
                 <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500" />
               </button>
 
@@ -123,11 +131,15 @@ export function SchoolDetailPage({
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
                   <div className="px-3 py-2.5 border-b border-stone-100 flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-                      S
+                      {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'S'}
                     </div>
-                    <div>
-                      <p className="font-bold text-slate-900 text-sm">Shiva Tiwari</p>
-                      <p className="text-[11px] text-slate-500">Citizen • Vav-Tharad</p>
+                    <div className="min-w-0">
+                      <p className="font-bold text-slate-900 text-sm truncate">
+                        {currentUser?.name || 'Shiva Tiwari'}
+                      </p>
+                      <p className="text-[11px] text-slate-500 truncate">
+                        {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
+                      </p>
                     </div>
                   </div>
                   <div className="py-1">
@@ -137,7 +149,7 @@ export function SchoolDetailPage({
                         setShowProfileMenu(false);
                         onOpenComplaints();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Track Active Grievances</span>
                       <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
@@ -150,7 +162,7 @@ export function SchoolDetailPage({
                         setShowProfileMenu(false);
                         onFileComplaint(school.name);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                     >
                       <span>Report Issue for {school.name}</span>
                       <Sparkles className="w-3.5 h-3.5 text-orange-500" />
@@ -161,7 +173,7 @@ export function SchoolDetailPage({
                         setShowProfileMenu(false);
                         onBackToSchools();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
                     >
                       Back to All Schools Directory
                     </button>
@@ -171,10 +183,23 @@ export function SchoolDetailPage({
                         setShowProfileMenu(false);
                         onBackToHome();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700"
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
                     >
                       Return to Main District Portal
                     </button>
+                    {onLogout && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onLogout();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 font-bold flex items-center justify-between cursor-pointer mt-1 border-t border-stone-100 pt-2"
+                      >
+                        <span>Log Out</span>
+                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
