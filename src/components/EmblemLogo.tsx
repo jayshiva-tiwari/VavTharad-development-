@@ -22,6 +22,7 @@ export function EmblemLogo() {
           {/* Waving Indian Tricolor Banner Flag */}
           <div className="flex items-center shrink-0" title="National Flag of India">
             <svg
+              suppressHydrationWarning
               className="w-5 sm:w-6 md:w-7 h-4 sm:h-5 md:h-5.5 -mt-0.5 drop-shadow-xs"
               viewBox="0 0 36 24"
               fill="none"
@@ -29,22 +30,25 @@ export function EmblemLogo() {
             >
               {/* Saffron wavy ribbon */}
               <path
+                suppressHydrationWarning
                 d="M1 4.5 C7 2 13 7.5 19 5 C25 2.5 31 6.5 35 4.5 L35 9.5 C31 11.5 25 7.5 19 10 C13 12.5 7 7 1 9.5 Z"
                 fill="#FF9933"
               />
               {/* White wavy ribbon */}
               <path
+                suppressHydrationWarning
                 d="M1 9.5 C7 7 13 12.5 19 10 C25 7.5 31 11.5 35 9.5 L35 14.5 C31 16.5 25 12.5 19 15 C13 17.5 7 12 1 14.5 Z"
                 fill="#FFFFFF"
               />
               {/* Green wavy ribbon */}
               <path
+                suppressHydrationWarning
                 d="M1 14.5 C7 12 13 17.5 19 15 C25 12.5 31 16.5 35 14.5 L35 19.5 C31 21.5 25 17.5 19 20 C13 22.5 7 17 1 19.5 Z"
                 fill="#138808"
               />
               {/* Ashoka Chakra in middle */}
-              <circle cx="18" cy="12.2" r="2" fill="none" stroke="#000088" strokeWidth="0.6" />
-              <circle cx="18" cy="12.2" r="0.5" fill="#000088" />
+              <circle suppressHydrationWarning cx="18" cy="12.2" r="2" fill="none" stroke="#000088" strokeWidth="0.6" />
+              <circle suppressHydrationWarning cx="18" cy="12.2" r="0.5" fill="#000088" />
             </svg>
           </div>
         </div>

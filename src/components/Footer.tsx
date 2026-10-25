@@ -6,7 +6,7 @@ interface FooterProps {
 
 export function Footer({ isGujarati }: FooterProps) {
   return (
-    <footer className="w-full bg-white border-t border-stone-200 py-3 sm:py-3.5 px-4 sm:px-6 lg:px-8 text-xs text-[#6b7280] relative z-20">
+    <footer suppressHydrationWarning className="w-full bg-white border-t border-stone-200 py-3 sm:py-3.5 px-4 sm:px-6 lg:px-8 text-xs text-[#6b7280] relative z-20">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
         {/* Left Side: "Public services made simple" + Indian Flag color dash */}
         <div className="flex items-center gap-2.5">

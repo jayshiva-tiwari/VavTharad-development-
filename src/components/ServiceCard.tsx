@@ -128,14 +128,16 @@ export function ServiceCard({
         >
           {id === 'animal-husbandry' ? (
             <svg
+              suppressHydrationWarning
               className="w-5 h-5 sm:w-6 sm:h-6 fill-current text-amber-800"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M19.5 7.5c-.3-.8-1.1-1.3-2-1.2l-2 .2c-.4-.7-1.1-1.2-1.9-1.3l-3.2-.2c-1.3 0-2.5.8-3 2l-1.4 3.5c-.3.7-.1 1.5.4 2l1.6 1.4v4.6c0 .8.7 1.5 1.5 1.5h1c.8 0 1.5-.7 1.5-1.5v-3h3v3c0 .8.7 1.5 1.5 1.5h1c.8 0 1.5-.7 1.5-1.5v-6.5l.6-.5c.6-.5.8-1.3.5-2l-.6-1.9zM7.2 9l1-2.4c.2-.5.8-.8 1.3-.8l2.9.2c.4 0 .7.3.9.7l.6 1.3-4.5 1.8L7.2 9z" />
+              <path suppressHydrationWarning d="M19.5 7.5c-.3-.8-1.1-1.3-2-1.2l-2 .2c-.4-.7-1.1-1.2-1.9-1.3l-3.2-.2c-1.3 0-2.5.8-3 2l-1.4 3.5c-.3.7-.1 1.5.4 2l1.6 1.4v4.6c0 .8.7 1.5 1.5 1.5h1c.8 0 1.5-.7 1.5-1.5v-3h3v3c0 .8.7 1.5 1.5 1.5h1c.8 0 1.5-.7 1.5-1.5v-6.5l.6-.5c.6-.5.8-1.3.5-2l-.6-1.9zM7.2 9l1-2.4c.2-.5.8-.8 1.3-.8l2.9.2c.4 0 .7.3.9.7l.6 1.3-4.5 1.8L7.2 9z" />
             </svg>
           ) : id === 'cleanliness' ? (
             <svg
+              suppressHydrationWarning
               className="w-5 h-5 sm:w-6 sm:h-6 stroke-current text-emerald-500"
               viewBox="0 0 24 24"
               fill="none"
@@ -143,11 +145,11 @@ export function ServiceCard({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="m14 4 6 6" />
-              <path d="m18 8-8.5 8.5" />
-              <path d="M9.5 16.5 4 22l-.5-3.5L7 15" />
-              <path d="m5 18 3.5-3.5" />
-              <path d="m7 20 3-3" />
+              <path suppressHydrationWarning d="m14 4 6 6" />
+              <path suppressHydrationWarning d="m18 8-8.5 8.5" />
+              <path suppressHydrationWarning d="M9.5 16.5 4 22l-.5-3.5L7 15" />
+              <path suppressHydrationWarning d="m5 18 3.5-3.5" />
+              <path suppressHydrationWarning d="m7 20 3-3" />
             </svg>
           ) : (
             <Icon className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.2} />

@@ -10,8 +10,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex items-center justify-center bg-slate-50 p-6 text-slate-800">
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className="min-h-screen flex items-center justify-center bg-slate-50 p-6 text-slate-800">
         <div className="max-w-md w-full bg-white p-6 rounded-2xl shadow-md border border-slate-200 text-center">
           <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
           <p className="text-sm text-slate-600 mb-4">{error?.message || 'An unexpected error occurred.'}</p>

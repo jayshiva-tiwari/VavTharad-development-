@@ -49,7 +49,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF9F5] text-slate-800 antialiased font-sans">
+    <div suppressHydrationWarning className="min-h-screen flex flex-col bg-[#FBF9F5] text-slate-800 antialiased font-sans">
       <Header
         isGujarati={isGujarati}
         onToggleLanguage={() => setIsGujarati(!isGujarati)}
@@ -59,7 +59,7 @@ export default function HomePage() {
         onOpenComplaints={() => setIsTrackerModalOpen(true)}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+      <main suppressHydrationWarning className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
         {/* Banner with Next.js router link to Education */}
         <div className="mb-8 p-6 bg-gradient-to-r from-[#0B2545] to-[#133E68] text-white rounded-3xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
           <div>

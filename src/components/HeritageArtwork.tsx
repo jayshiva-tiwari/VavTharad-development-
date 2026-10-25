@@ -1,11 +1,12 @@
 export function HeritageArtwork() {
   return (
-    <div className="relative w-full overflow-hidden select-none pointer-events-none mt-2 sm:mt-4 rounded-2xl min-h-[170px] sm:min-h-[200px] flex items-end">
+    <div suppressHydrationWarning className="relative w-full overflow-hidden select-none pointer-events-none mt-2 sm:mt-4 rounded-2xl min-h-[170px] sm:min-h-[200px] flex items-end">
       {/* Background warm golden ambient gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#EFE5D3]/90 via-[#F7EFE2]/60 to-transparent" />
 
       {/* SVG Canvas for Stone Architecture & Temple Shikhara */}
       <svg
+        suppressHydrationWarning
         className="absolute inset-0 w-full h-full object-cover object-bottom"
         viewBox="0 0 900 320"
         preserveAspectRatio="xMidYMax slice"

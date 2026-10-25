@@ -1,6 +1,7 @@
 export function BottomHeritageLandscape() {
   return (
     <div
+      suppressHydrationWarning
       className="relative w-full overflow-hidden pointer-events-none select-none"
       style={{ height: '360px', marginTop: '-120px' }}
       aria-hidden="true"
@@ -10,6 +11,7 @@ export function BottomHeritageLandscape() {
 
       {/* Panoramic SVG Landscape of Indian Temple, Stepwell Colonnade, and Landscape */}
       <svg
+        suppressHydrationWarning
         className="w-full h-full object-cover object-bottom"
         viewBox="0 0 1440 360"
         preserveAspectRatio="xMidYMax slice"
