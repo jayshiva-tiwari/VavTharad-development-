@@ -20,20 +20,24 @@ export function Footer({ isGujarati }: FooterProps) {
           </div>
         </div>
 
-        {/* Right Side: Three flex items with small gray icons and gray text */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[#6b7280] font-normal text-xs">
+        {/* Right Side: Three items with vertical line dividers */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[#6b7280] font-normal text-xs">
           <div className="flex items-center gap-1.5 hover:text-[#102c57] transition-colors">
-            <Users className="w-3.5 h-3.5 text-[#6b7280]" />
+            <Users className="w-3.5 h-3.5 text-slate-700" />
             <span>{isGujarati ? 'જન હિત સર્વોપરી' : 'People First'}</span>
           </div>
 
+          <span className="hidden sm:inline-block h-3.5 w-[1px] bg-slate-300" aria-hidden="true" />
+
           <div className="flex items-center gap-1.5 hover:text-[#102c57] transition-colors">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#6b7280]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />
             <span>{isGujarati ? 'પારદર્શક વહીવટ' : 'Transparent Governance'}</span>
           </div>
 
+          <span className="hidden sm:inline-block h-3.5 w-[1px] bg-slate-300" aria-hidden="true" />
+
           <div className="flex items-center gap-1.5 hover:text-[#102c57] transition-colors">
-            <BarChart3 className="w-3.5 h-3.5 text-[#6b7280]" />
+            <BarChart3 className="w-3.5 h-3.5 text-slate-700" />
             <span>{isGujarati ? 'સશક્ત વાવ-થરાદ' : 'Stronger Vav-Tharad'}</span>
           </div>
         </div>

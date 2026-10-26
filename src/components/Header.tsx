@@ -31,34 +31,18 @@ export function Header({
         <EmblemLogo />
 
         {/* Right: Language switch + User profile or Auth buttons */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {/* Next.js Badge button */}
-          {onOpenNextJsModal && (
-            <button
-              type="button"
-              onClick={onOpenNextJsModal}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold text-[#0B2545] bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 rounded-xl transition-all cursor-pointer active:scale-95 shadow-2xs"
-              title="Next.js 15 App Router Architecture & Files"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="font-extrabold">Next.js 15</span>
-            </button>
-          )}
-          {/* Language Switcher */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Subtle Language Switcher */}
           <button
             onClick={onToggleLanguage}
             type="button"
-            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs md:text-sm font-semibold text-slate-700 bg-stone-100/90 hover:bg-stone-200/90 rounded-xl transition-colors cursor-pointer border border-stone-200/80 active:scale-95"
+            className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-stone-200/50 transition-colors cursor-pointer"
             title="Switch Language / ભાષા બદલો"
             aria-label="Toggle Gujarati / English language"
           >
             <Globe className="w-3.5 h-3.5 text-orange-600 shrink-0" />
-            <span className={isGujarati ? 'font-gujarati font-bold text-orange-700' : 'text-slate-800'}>
+            <span className="font-semibold text-xs">
               {isGujarati ? 'EN' : 'ગુજ'}
-            </span>
-            <span className="hidden md:inline text-slate-400">/</span>
-            <span className="hidden md:inline text-slate-500">
-              {isGujarati ? 'English' : 'ગુજરાતી'}
             </span>
           </button>
 
@@ -161,19 +145,19 @@ export function Header({
               <button
                 onClick={() => onOpenAuth('login')}
                 type="button"
-                className="flex items-center gap-1.5 px-2.5 sm:px-3.5 md:px-4 py-1.5 sm:py-2 md:py-2.5 text-[11px] sm:text-xs md:text-sm font-semibold text-slate-800 bg-white hover:bg-stone-50 border border-slate-300 rounded-xl transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
+                className="flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
               >
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600 shrink-0" />
+                <User className="w-4 h-4 text-slate-700 shrink-0" strokeWidth={1.8} />
                 <span>{isGujarati ? 'લૉગ ઇન' : 'Log in'}</span>
               </button>
 
               <button
-                onClick={() => onOpenAuth('signup')}
+                onClick={() => onOpenAuth('signin')}
                 type="button"
-                className="flex items-center gap-1.5 px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 text-[11px] sm:text-xs md:text-sm font-semibold text-white bg-[#0B2545] hover:bg-[#071c35] rounded-xl transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
+                className="flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-[#0B2545] hover:bg-[#133E68] rounded-lg transition-all shadow-xs cursor-pointer active:scale-95 shrink-0"
               >
-                <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
-                <span>{isGujarati ? 'સાઇન અપ' : 'Sign up'}</span>
+                <LogIn className="w-4 h-4 text-white shrink-0" strokeWidth={2} />
+                <span>{isGujarati ? 'સાઇન ઇન' : 'Sign in'}</span>
               </button>
             </div>
           )}
