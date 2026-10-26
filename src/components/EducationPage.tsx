@@ -134,7 +134,7 @@ export function EducationPage({
   ];
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900">
+    <div className="min-h-[100dvh] pb-24 md:pb-0 flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900 overflow-x-hidden">
       {/* 1. Header with panoramic background matching image_32066463.png */}
       <header className="sticky top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
         {/* Subtle Panoramic Heritage Temple & Landscape in Header Center */}
@@ -182,9 +182,9 @@ export function EducationPage({
                 <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
               </button>
 
-              {/* Profile Dropdown */}
+              {/* Profile Dropdown (Desktop) */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
+                <div className="hidden sm:block absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
                   <div className="px-3 py-2.5 border-b border-stone-100 flex items-center gap-2.5">
                     <img
                       src="/assets/education/shiva_avatar.png"
@@ -281,6 +281,127 @@ export function EducationPage({
                         <LogOut className="w-3.5 h-3.5 text-rose-500" />
                       </button>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Bottom Sheet Drawer for Education Profile Menu */}
+              {showProfileMenu && (
+                <div className="fixed inset-0 z-50 sm:hidden flex items-end justify-center bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
+                  <div
+                    className="fixed inset-0"
+                    onClick={() => setShowProfileMenu(false)}
+                    aria-hidden="true"
+                  />
+                  <div className="relative z-10 w-full bg-white rounded-t-3xl shadow-2xl border-t border-stone-200 p-5 pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] animate-in slide-in-from-bottom duration-250">
+                    <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-4" />
+                    <div className="flex items-center gap-3 pb-3 border-b border-stone-100">
+                      <img
+                        src="/assets/education/shiva_avatar.png"
+                        alt="Profile"
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-blue-100"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-slate-900 text-base truncate">
+                          {currentUser?.name || 'Shiva Tiwari'}
+                        </p>
+                        <p className="text-xs text-slate-500 truncate">
+                          {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowProfileMenu(false)}
+                        aria-label="Close menu"
+                        className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-slate-500 tap-feedback active:scale-90"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+
+                    <div className="py-3 space-y-1.5 text-sm">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onOpenComplaints();
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-800 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+                      >
+                        <span>Track Active Grievances</span>
+                        <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                          3
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onNavigateToDirectory('schools');
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-800 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+                      >
+                        <span>Browse Schools (15)</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onNavigateToDirectory('teachers');
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-800 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+                      >
+                        <span>Teacher Directory (40+)</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onNavigateToDirectory('students');
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-800 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+                      >
+                        <span>Student Enrollment (5,000+)</span>
+                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onFileEducationComplaint();
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl bg-amber-50/80 hover:bg-amber-100 text-amber-900 font-bold flex items-center justify-between border border-amber-200/60 tap-feedback active:scale-98"
+                      >
+                        <span>File School Grievance</span>
+                        <Sparkles className="w-4 h-4 text-orange-500" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onBackToHome();
+                        }}
+                        className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-700 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+                      >
+                        <span>Return to Main District Portal</span>
+                        <Home className="w-4 h-4 text-slate-400" />
+                      </button>
+                      {onLogout && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowProfileMenu(false);
+                            onLogout();
+                          }}
+                          className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold flex items-center justify-between border border-rose-100 tap-feedback active:scale-98"
+                        >
+                          <span>Log Out</span>
+                          <LogOut className="w-4 h-4 text-rose-500" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

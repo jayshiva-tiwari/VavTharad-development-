@@ -8,6 +8,8 @@ import { ComplaintModal } from '@/src/components/ComplaintModal';
 import { Complaint, UserSession } from '@/src/types';
 import { INITIAL_COMPLAINTS } from '@/src/data/mockData';
 
+import { MobileBottomNav } from '@/src/components/MobileBottomNav';
+
 const DEFAULT_SHIVA_SESSION: UserSession = {
   name: 'Shiva Tiwari',
   mobile: '9876543210',
@@ -48,6 +50,12 @@ export default function NextEducationPage() {
         initialDepartmentId="education"
         currentUser={currentUser}
         onComplaintSubmitted={(c) => setComplaints((prev) => [c, ...prev])}
+      />
+
+      <MobileBottomNav
+        onOpenComplaint={() => setIsComplaintOpen(true)}
+        onOpenTracker={() => setIsTrackerOpen(true)}
+        currentUser={currentUser}
       />
     </>
   );

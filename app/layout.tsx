@@ -22,6 +22,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#0B2545',
 };
 
 export default function RootLayout({
@@ -30,13 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <head>
         <meta name="darkreader-lock" content="darkreader-lock" />
       </head>
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-[#FBF9F5] text-slate-800 antialiased selection:bg-orange-500 selection:text-white"
+        className="min-h-[100dvh] w-full overflow-x-hidden bg-[#FBF9F5] text-slate-800 antialiased selection:bg-orange-500 selection:text-white"
       >
         {children}
       </body>

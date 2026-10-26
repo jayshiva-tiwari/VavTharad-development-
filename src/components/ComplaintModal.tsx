@@ -200,19 +200,22 @@ export function ComplaintModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pb-[env(safe-area-inset-bottom,0px)] bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl max-h-[92dvh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="sm:hidden w-12 h-1.5 bg-stone-300 rounded-full mx-auto mt-2.5 mb-1 shrink-0" />
+
         {/* Top Header */}
-        <div className="px-6 py-4.5 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#102c57] text-white flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#102c57] text-white flex items-center justify-center font-bold shrink-0">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              <h2 className="text-base sm:text-xl font-bold text-slate-900">
                 {isGujarati ? 'ઓનલાઇન ફરિયાદ નોંધાવો' : 'Submit a Grievance'}
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-[11px] sm:text-xs text-slate-500">
                 {isGujarati ? 'વાવ-થરાદ વહીવટી તંત્ર, ગુજરાત સરકાર' : 'Vav-Tharad District Administration'}
               </p>
             </div>
@@ -220,7 +223,8 @@ export function ComplaintModal({
           <button
             onClick={onClose}
             type="button"
-            className="w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            aria-label="Close modal"
+            className="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors tap-feedback active:scale-90"
           >
             <X className="w-5 h-5" />
           </button>
@@ -292,7 +296,7 @@ export function ComplaintModal({
                   <select
                     value={taluka}
                     onChange={(e) => handleTalukaChange(e.target.value as TalukaName)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-medium focus:ring-2 focus:ring-[#102c57] focus:outline-none"
+                    className="w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-base sm:text-sm font-medium focus:ring-2 focus:ring-[#102c57] focus:outline-none"
                   >
                     {TALUKAS.map((t) => (
                       <option key={t.name} value={t.name}>
@@ -309,7 +313,7 @@ export function ComplaintModal({
                   <select
                     value={village}
                     onChange={(e) => setVillage(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-medium focus:ring-2 focus:ring-[#102c57] focus:outline-none"
+                    className="w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-base sm:text-sm font-medium focus:ring-2 focus:ring-[#102c57] focus:outline-none"
                   >
                     {currentVillages.map((v) => (
                       <option key={v} value={v}>
@@ -342,7 +346,7 @@ export function ComplaintModal({
                     setSubject(e.target.value);
                     if (errors.subject) setErrors({ ...errors, subject: '' });
                   }}
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
+                  className={`w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border text-base sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
                     errors.subject ? 'border-red-400 bg-red-50/30' : 'border-stone-300 bg-white'
                   }`}
                 />
@@ -460,13 +464,14 @@ export function ComplaintModal({
                 </label>
                 <input
                   type="text"
+                  autoComplete="name"
                   placeholder={isGujarati ? 'દા.ત., રમેશભાઈ પટેલ' : 'e.g. Rameshbhai Patel'}
                   value={citizenName}
                   onChange={(e) => {
                     setCitizenName(e.target.value);
                     if (errors.name) setErrors({ ...errors, name: '' });
                   }}
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
+                  className={`w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border text-base sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
                     errors.name ? 'border-red-400 bg-red-50/30' : 'border-stone-300 bg-white'
                   }`}
                 />
@@ -484,9 +489,11 @@ export function ComplaintModal({
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-2.5 text-xs font-bold text-slate-500">+91</span>
+                  <span className="absolute left-3.5 top-3.5 text-xs font-bold text-slate-500">+91</span>
                   <input
                     type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel"
                     maxLength={10}
                     placeholder="98250 12345"
                     value={citizenMobile}
@@ -494,7 +501,7 @@ export function ComplaintModal({
                       setCitizenMobile(e.target.value);
                       if (errors.mobile) setErrors({ ...errors, mobile: '' });
                     }}
-                    className={`w-full pl-12 pr-3.5 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
+                    className={`w-full min-h-[48px] pl-12 pr-3.5 py-2.5 rounded-xl border text-base sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57] ${
                       errors.mobile ? 'border-red-400 bg-red-50/30' : 'border-stone-300 bg-white'
                     }`}
                   />
@@ -586,12 +593,12 @@ export function ComplaintModal({
         </div>
 
         {/* Modal Footer Controls */}
-        <div className="px-6 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between">
+        <div className="px-6 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-3">
           {step > 1 && step < 4 ? (
             <button
               type="button"
               onClick={() => setStep((s) => (s - 1) as 1 | 2 | 3)}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+              className="min-h-[48px] px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 rounded-xl hover:bg-stone-100 flex items-center gap-1.5 tap-feedback active:scale-95 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               {isGujarati ? 'પાછા જાઓ' : 'Back'}
@@ -604,7 +611,7 @@ export function ComplaintModal({
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer ml-auto"
+              className="min-h-[48px] flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer ml-auto tap-feedback active:scale-95 transition-all"
             >
               <span>{isGujarati ? 'આગળ વધો' : 'Continue'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -617,7 +624,7 @@ export function ComplaintModal({
               onClick={() => {
                 if (validateStep2()) setStep(3);
               }}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer"
+              className="min-h-[48px] flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer tap-feedback active:scale-95 transition-all"
             >
               <span>{isGujarati ? 'નાગરિક માહિતી દાખલ કરો' : 'Next: Citizen Info'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -628,7 +635,7 @@ export function ComplaintModal({
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer"
+              className="min-h-[48px] flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer tap-feedback active:scale-95 transition-all"
             >
               <span>{isGujarati ? 'ફરિયાદ સબમિટ કરો' : 'Submit Grievance'}</span>
               <CheckCircle className="w-4 h-4" />
@@ -639,7 +646,7 @@ export function ComplaintModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer ml-auto"
+              className="min-h-[48px] px-6 py-2.5 rounded-xl bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold shadow-xs cursor-pointer ml-auto tap-feedback active:scale-95 transition-all"
             >
               {isGujarati ? 'પૂર્ણ કરો' : 'Done & Track Later'}
             </button>

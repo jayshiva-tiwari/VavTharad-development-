@@ -21,22 +21,26 @@ export function ServiceDetailModal({
   if (!service) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pb-[env(safe-area-inset-bottom,0px)] bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-xl max-h-[90dvh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+        {/* Mobile Drag Handle */}
+        <div className="sm:hidden w-12 h-1.5 bg-stone-300 rounded-full mx-auto mt-2.5 mb-1 shrink-0" />
+
         {/* Top Header */}
-        <div className="px-6 py-4.5 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
           <div>
             <span className="text-[10px] font-bold tracking-wider text-orange-600 uppercase">
               {service.category}
             </span>
-            <h3 className="text-xl font-bold text-slate-900 font-sans">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 font-sans">
               {isGujarati ? service.nameGu : service.name}
             </h3>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            aria-label="Close modal"
+            className="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors tap-feedback active:scale-90"
           >
             <X className="w-5 h-5" />
           </button>
@@ -110,11 +114,11 @@ export function ServiceDetailModal({
         </div>
 
         {/* Footer with primary CTA */}
-        <div className="px-6 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-3">
+        <div className="px-5 sm:px-6 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
+            className="min-h-[48px] px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-stone-100 tap-feedback active:scale-95"
           >
             {isGujarati ? 'બંધ કરો' : 'Close'}
           </button>
@@ -125,7 +129,7 @@ export function ServiceDetailModal({
               onClose();
               onFileComplaint(service.id);
             }}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
+            className="min-h-[48px] flex items-center gap-2 px-5 py-2.5 bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-all cursor-pointer tap-feedback active:scale-95"
           >
             <FilePlus className="w-4 h-4" />
             <span>

@@ -29,6 +29,7 @@ if (process.env.NG_ALLOWED_HOSTS) {
 const nextConfig = {
   reactStrictMode: true,
   allowedDevOrigins: allowedOrigins,
+  devIndicators: false,
   images: {
     remotePatterns: [
       {

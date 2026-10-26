@@ -76,19 +76,22 @@ export function StatusTrackerModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl w-full max-w-3xl max-h-[92vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pb-[env(safe-area-inset-bottom,0px)] bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-3xl max-h-[92dvh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="sm:hidden w-12 h-1.5 bg-stone-300 rounded-full mx-auto mt-2.5 mb-1 shrink-0" />
+
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 bg-gradient-to-r from-stone-50 via-white to-stone-50 border-b border-stone-200/80 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#102c57] text-white flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#102c57] text-white flex items-center justify-center font-bold shrink-0">
               <Search className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+              <h2 className="text-base sm:text-xl font-bold text-slate-900">
                 {isGujarati ? 'ફરિયાદ સ્થિતિ તપાસો (Live Tracking)' : 'Track Grievance Status'}
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-[11px] sm:text-xs text-slate-500">
                 {isGujarati ? 'વાવ-થરાદ પારદર્શક ફરિયાદ નિવારણ વ્યવસ્થા' : 'Real-time timeline & officer assignment'}
               </p>
             </div>
@@ -96,7 +99,8 @@ export function StatusTrackerModal({
           <button
             onClick={onClose}
             type="button"
-            className="w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            aria-label="Close modal"
+            className="w-10 h-10 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors tap-feedback active:scale-90"
           >
             <X className="w-5 h-5" />
           </button>
@@ -106,18 +110,19 @@ export function StatusTrackerModal({
         <div className="p-4 sm:p-6 bg-stone-50 border-b border-stone-200/70">
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 placeholder={isGujarati ? 'ફરિયાદ ID દાખલ કરો (દા.ત. VT-2026-4401)' : 'Enter Complaint ID (e.g. VT-2026-4401)'}
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-300 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57]"
+                autoComplete="off"
+                className="w-full min-h-[48px] pl-10 pr-4 py-2.5 bg-white border border-stone-300 rounded-xl text-base sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#102c57]"
               />
             </div>
             <button
               type="submit"
-              className="px-5 py-2.5 bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl transition-colors shadow-xs"
+              className="min-h-[48px] px-5 py-2.5 bg-[#102c57] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs tap-feedback active:scale-95 flex items-center justify-center shrink-0"
             >
               {isGujarati ? 'શોધો' : 'Search'}
             </button>

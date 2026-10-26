@@ -13,6 +13,7 @@ import {
   Building2
 } from 'lucide-react';
 import { UserSession } from '../types';
+import { OtpInputGroup } from './OtpInputGroup';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -152,8 +153,11 @@ export function AuthModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/75 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
-      <div className="bg-white rounded-3xl w-full max-w-md my-auto flex flex-col shadow-2xl border border-stone-200 overflow-hidden relative">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/75 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto pb-[env(safe-area-inset-bottom,0px)]">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92dvh] my-0 sm:my-auto flex flex-col shadow-2xl border border-stone-200 overflow-hidden relative">
+        {/* Mobile Drag Indicator bar */}
+        <div className="sm:hidden w-12 h-1.5 bg-slate-200 rounded-full mx-auto my-2 shrink-0" />
+
         {/* Mandatory Gate Notice Banner if first land */}
         {isMandatory && (
           <div className="bg-[#0B2545] text-amber-300 px-4 py-2.5 text-xs font-bold text-center flex items-center justify-center gap-2 border-b border-amber-400/20">
@@ -314,24 +318,26 @@ export function AuthModal({
                 !otpSent ? (
                   <form onSubmit={handleSendLoginOtp} className="space-y-3.5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">
                         {isGujarati ? 'મોબાઈલ નંબર દાખલ કરો' : 'Registered Mobile Number'}
                       </label>
                       <div className="relative">
-                        <span className="absolute left-3.5 top-2.5 text-xs font-bold text-slate-400">
+                        <span className="absolute left-3.5 top-3.5 text-sm font-bold text-slate-400">
                           +91
                         </span>
                         <input
                           type="tel"
+                          inputMode="numeric"
+                          autoComplete="tel"
                           maxLength={12}
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="98250 12345"
-                          className="w-full pl-12 pr-4 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B2545]"
+                          className="w-full pl-12 pr-4 py-3 min-h-[48px] bg-stone-50 border border-stone-300 rounded-xl text-base sm:text-sm font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0B2545]"
                           required
                         />
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-1">
+                      <p className="text-[11px] sm:text-xs text-slate-500 mt-1.5">
                         {isGujarati
                           ? 'આપના મોબાઈલ પર 6 અંકનો સુરક્ષિત OTP મોકલવામાં આવશે.'
                           : 'A 6-digit verification OTP will be sent to your number.'}
@@ -340,7 +346,7 @@ export function AuthModal({
 
                     <button
                       type="submit"
-                      className="w-full py-2.5 bg-[#0B2545] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2 active:scale-98"
+                      className="w-full py-3 min-h-[48px] bg-[#0B2545] hover:bg-[#071c35] text-white text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2 tap-feedback active:scale-95"
                     >
                       <Phone className="w-4 h-4" />
                       <span>{isGujarati ? 'ઓટીપી મોકલો' : 'Send Verification OTP'}</span>
@@ -348,7 +354,7 @@ export function AuthModal({
                   </form>
                 ) : (
                   <form onSubmit={handleVerifyLoginOtp} className="space-y-3.5">
-                    <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between">
+                    <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs sm:text-sm text-emerald-800 flex items-center justify-between">
                       <span>OTP sent to +91 {phone}</span>
                       <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-300">
                         Demo: 123456
@@ -356,17 +362,19 @@ export function AuthModal({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        {isGujarati ? '૬ અંકનો OTP દાખલ કરો' : 'Enter 6-Digit OTP'}
-                      </label>
-                      <input
-                        type="text"
-                        maxLength={6}
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs sm:text-sm font-bold text-slate-700">
+                          {isGujarati ? '૬ અંકનો OTP દાખલ કરો' : 'Enter 6-Digit OTP'}
+                        </label>
+                        <span className="text-[11px] text-slate-400">Auto-advances</span>
+                      </div>
+                      <OtpInputGroup
                         value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        placeholder="123456"
-                        className="w-full text-center tracking-widest text-xl font-mono py-2.5 bg-white border border-stone-300 rounded-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0B2545]"
-                        required
+                        onChange={setOtp}
+                        length={6}
+                        onComplete={() => {
+                          // Auto advance verify
+                        }}
                       />
                     </div>
 
@@ -374,13 +382,13 @@ export function AuthModal({
                       <button
                         type="button"
                         onClick={() => setOtpSent(false)}
-                        className="px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-semibold rounded-xl cursor-pointer"
+                        className="px-4 py-3 min-h-[48px] bg-stone-100 hover:bg-stone-200 text-slate-700 text-sm font-semibold rounded-xl cursor-pointer tap-feedback active:scale-95"
                       >
                         Back
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-2.5 bg-[#0B2545] hover:bg-[#071c35] text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5 active:scale-98"
+                        className="flex-1 py-3 min-h-[48px] bg-[#0B2545] hover:bg-[#071c35] text-white text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5 tap-feedback active:scale-95"
                       >
                         <span>{isGujarati ? 'ચકાસો અને પ્રવેશો' : 'Verify & Enter Portal'}</span>
                         <ArrowRight className="w-4 h-4" />
@@ -524,17 +532,16 @@ export function AuthModal({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      {isGujarati ? '૬ અંકનો OTP દાખલ કરો' : 'Confirm Registration OTP'}
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={6}
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-xs font-bold text-slate-700">
+                        {isGujarati ? '૬ અંકનો OTP દાખલ કરો' : 'Confirm Registration OTP'}
+                      </label>
+                      <span className="text-[11px] text-slate-400">Auto-advances</span>
+                    </div>
+                    <OtpInputGroup
                       value={signupOtp}
-                      onChange={(e) => setSignupOtp(e.target.value)}
-                      placeholder="123456"
-                      className="w-full text-center tracking-widest text-xl font-mono py-2 bg-white border border-stone-300 rounded-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0B2545]"
-                      required
+                      onChange={setSignupOtp}
+                      length={6}
                     />
                   </div>
 

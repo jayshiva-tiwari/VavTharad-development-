@@ -8,8 +8,48 @@
 
 body {
   font-family: var(--font-primary);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .font-gujarati {
   font-family: var(--font-gujarati);
+}
+
+/* Mobile input minimum 16px to prevent iOS auto-zoom */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Active touch feedback */
+.tap-feedback {
+  transition: transform 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+  user-select: none;
+}
+.tap-feedback:active {
+  transform: scale(0.97);
+  filter: brightness(0.96);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Suppress Next.js dev indicator badge that overlaps with bottom navigation */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-indicator],
+div[data-next-badge],
+#nextjs-dev-indicator {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
