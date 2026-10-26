@@ -1,6 +1,8 @@
-export function EmblemLogo() {
+import Link from 'next/link';
+
+export function EmblemLogo({ href = '/' }: { href?: string }) {
   return (
-    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+    <Link href={href} className="flex items-center gap-2 sm:gap-3 shrink-0 cursor-pointer group focus:outline-none">
       {/* Official Ashoka Lion Emblem Image uploaded by user */}
       <div className="flex flex-col items-center shrink-0">
         <img
@@ -56,6 +58,6 @@ export function EmblemLogo() {
           GOVERNMENT OF GUJARAT
         </span>
       </div>
-    </div>
+    </Link>
   );
 }

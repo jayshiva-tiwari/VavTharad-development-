@@ -523,16 +523,10 @@ export function DirectoryPage({
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900">
       {/* 1. Header with Vav-Tharad branding matching image_791c570a.png */}
-      <header className="relative w-full bg-white border-b border-stone-200/80 shadow-xs z-30 overflow-hidden">
+      <header className="sticky top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Emblem of India and Vav-Tharad branding */}
-          <button
-            type="button"
-            onClick={onBackToHome}
-            className="text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-800 rounded-lg shrink-0"
-          >
-            <EmblemLogo />
-          </button>
+          <EmblemLogo href="/" />
 
           {/* Right: "Your Complaints" button and "Shiva" user profile */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">

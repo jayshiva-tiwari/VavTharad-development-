@@ -156,12 +156,12 @@ export function AuthModal({
       <div className="bg-white rounded-3xl w-full max-w-md my-auto flex flex-col shadow-2xl border border-stone-200 overflow-hidden relative">
         {/* Mandatory Gate Notice Banner if first land */}
         {isMandatory && (
-          <div className="bg-[#0B2545] text-amber-300 px-4 py-2 text-[11px] font-semibold text-center flex items-center justify-center gap-1.5 border-b border-amber-400/20">
-            <Lock className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+          <div className="bg-[#0B2545] text-amber-300 px-4 py-2.5 text-xs font-bold text-center flex items-center justify-center gap-2 border-b border-amber-400/20">
+            <Lock className="w-4 h-4 text-amber-300 shrink-0" />
             <span>
               {isGujarati
-                ? 'પોર્ટલનો ઉપયોગ કરવા માટે કૃપા કરીને પ્રથમ લૉગિન અથવા સાઇન અપ કરો'
-                : 'Please Log In or Sign Up to enter the Vav-Tharad District Portal'}
+                ? 'વાવ-થરાદ જિલ્લા પોર્ટલમાં પ્રવેશવા માટે કૃપા કરીને સાઇન ઇન કરો'
+                : 'Please Sign In to enter the Vav-Tharad District Portal'}
             </span>
           </div>
         )}
@@ -218,7 +218,7 @@ export function AuthModal({
             }`}
           >
             <User className="w-4 h-4" />
-            <span>{isGujarati ? 'લૉગ ઇન (Log In)' : 'Log In'}</span>
+            <span>{isGujarati ? 'સાઇન ઇન (Sign In)' : 'Sign In'}</span>
           </button>
 
           <button

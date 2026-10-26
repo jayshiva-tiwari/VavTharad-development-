@@ -44,9 +44,9 @@ export default function HomePage() {
   const [complaints, setComplaints] = useState<Complaint[]>(INITIAL_COMPLAINTS);
   const [currentUser, setCurrentUser] = useState<UserSession | null>(null);
   const [authModal, setAuthModal] = useState<{ open: boolean; mode: 'login' | 'signup' | 'signin'; isMandatory: boolean }>({
-    open: false,
+    open: true,
     mode: 'login',
-    isMandatory: false,
+    isMandatory: true,
   });
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isComplaintModalOpen, setIsComplaintModalOpen] = useState<boolean>(false);
@@ -61,6 +61,33 @@ export default function HomePage() {
     setIsTrackerModalOpen(true);
   };
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('vav_tharad_user_session');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed?.isLoggedIn) {
+            setCurrentUser(parsed);
+            setAuthModal({ open: false, mode: 'login', isMandatory: false });
+          } else {
+            setAuthModal({ open: true, mode: 'login', isMandatory: true });
+          }
+        } else {
+          setAuthModal({ open: true, mode: 'login', isMandatory: true });
+        }
+      } catch (err) {
+        setAuthModal({ open: true, mode: 'login', isMandatory: true });
+      }
+
+      if (window.location.hash === '#tracker' || window.location.hash === '#complaints') {
+        setIsTrackerModalOpen(true);
+      } else if (window.location.hash === '#complaint') {
+        setIsComplaintModalOpen(true);
+      }
+    }
+  }, []);
+
   return (
     <div suppressHydrationWarning className="min-h-screen flex flex-col bg-[#FBF9F5] text-slate-800 antialiased font-sans">
       <Header
@@ -68,7 +95,15 @@ export default function HomePage() {
         onToggleLanguage={() => setIsGujarati(!isGujarati)}
         onOpenAuth={(mode) => setAuthModal({ open: true, mode, isMandatory: false })}
         currentUser={currentUser}
-        onLogout={() => setCurrentUser(null)}
+        onLogout={() => {
+          setCurrentUser(null);
+          try {
+            localStorage.removeItem('vav_tharad_user_session');
+          } catch (e) {
+            console.error(e);
+          }
+          setAuthModal({ open: true, mode: 'login', isMandatory: true });
+        }}
         onOpenComplaints={() => setIsTrackerModalOpen(true)}
       />
 
@@ -412,7 +447,12 @@ export default function HomePage() {
         isMandatory={authModal.isMandatory}
         onSuccess={(session) => {
           setCurrentUser(session);
-          setAuthModal({ ...authModal, open: false });
+          try {
+            localStorage.setItem('vav_tharad_user_session', JSON.stringify(session));
+          } catch (e) {
+            console.error(e);
+          }
+          setAuthModal({ open: false, mode: 'login', isMandatory: false });
         }}
       />
     </div>
