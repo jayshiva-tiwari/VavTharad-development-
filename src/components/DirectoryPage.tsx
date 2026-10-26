@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Home,
   ChevronRight,
@@ -15,6 +16,7 @@ import {
   CheckCircle2,
   FileText,
   ChevronDown,
+  X,
   LogOut
 } from 'lucide-react';
 import { EmblemLogo } from './EmblemLogo';
@@ -483,6 +485,11 @@ export function DirectoryPage({
   const [filterType, setFilterType] = useState<'all' | 'private' | 'government'>('all');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Filtered schools
   const filteredSchools = useMemo(() => {
@@ -523,7 +530,7 @@ export function DirectoryPage({
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900">
       {/* 1. Header with Vav-Tharad branding matching image_791c570a.png */}
-      <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
+      <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
         <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Emblem of India and Vav-Tharad branding */}
           <EmblemLogo href="/" />
@@ -554,74 +561,81 @@ export function DirectoryPage({
                 <span className="text-xs sm:text-sm font-bold text-slate-800 hidden xs:inline">
                   {currentUser?.name ? currentUser.name.split(' ')[0] : 'Shiva'}
                 </span>
-                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500" />
+                <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
               </button>
 
-              {/* Profile Dropdown */}
+              {/* Profile Dropdown (Desktop) */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs">
-                  <div className="px-3 py-2.5 border-b border-stone-100 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-                      {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'S'}
+                <>
+                  <div
+                    className="hidden sm:block fixed inset-0 z-40"
+                    onClick={() => setShowProfileMenu(false)}
+                    aria-hidden="true"
+                  />
+                  <div className="hidden sm:block absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-stone-200 p-2 z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3 py-2.5 border-b border-stone-100 flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
+                        {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'S'}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm truncate">
+                          {currentUser?.name || 'Shiva Tiwari'}
+                        </p>
+                        <p className="text-[11px] text-slate-500 truncate">
+                          {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-bold text-slate-900 text-sm truncate">
-                        {currentUser?.name || 'Shiva Tiwari'}
-                      </p>
-                      <p className="text-[11px] text-slate-500 truncate">
-                        {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="py-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowProfileMenu(false);
-                        onOpenComplaints();
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
-                    >
-                      <span>Track Active Grievances</span>
-                      <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
-                        3
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowProfileMenu(false);
-                        onFileComplaint('education');
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
-                    >
-                      <span>Report School Issue</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowProfileMenu(false);
-                        onBackToEducation();
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
-                    >
-                      Back to Education Overview
-                    </button>
-                    {onLogout && (
+                    <div className="py-1">
                       <button
                         type="button"
                         onClick={() => {
                           setShowProfileMenu(false);
-                          onLogout();
+                          onOpenComplaints();
                         }}
-                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 font-bold flex items-center justify-between cursor-pointer mt-1 border-t border-stone-100 pt-2"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 flex items-center justify-between cursor-pointer"
                       >
-                        <span>Log Out</span>
-                        <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                        <span>Track Active Grievances</span>
+                        <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
+                          3
+                        </span>
                       </button>
-                    )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onFileComplaint('education');
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
+                      >
+                        <span>Report School Issue</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onBackToEducation();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-stone-50 font-medium text-slate-700 cursor-pointer"
+                      >
+                        Back to Education Overview
+                      </button>
+                      {onLogout && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowProfileMenu(false);
+                            onLogout();
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 text-rose-600 font-bold flex items-center justify-between cursor-pointer mt-1 border-t border-stone-100 pt-2"
+                        >
+                          <span>Log Out</span>
+                          <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -1206,6 +1220,104 @@ export function DirectoryPage({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Mobile Bottom Sheet Drawer for User Profile (Rendered via portal into document.body) */}
+      {mounted && showProfileMenu && createPortal(
+        <div className="fixed inset-0 z-50 sm:hidden flex items-end justify-center bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div
+            className="fixed inset-0"
+            onClick={() => setShowProfileMenu(false)}
+            aria-hidden="true"
+          />
+          <div className="relative z-10 w-full max-h-[85dvh] overflow-y-auto bg-white rounded-t-3xl shadow-2xl border-t border-stone-200 p-5 pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] animate-in slide-in-from-bottom duration-250">
+            <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-4" />
+            <div className="flex items-center gap-3 pb-3 border-b border-stone-100">
+              <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-lg ring-2 ring-blue-200">
+                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'S'}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-slate-900 text-base truncate">
+                  {currentUser?.name || 'Shiva Tiwari'}
+                </p>
+                <p className="text-xs text-slate-500 truncate">
+                  {currentUser?.mobile ? `+91 ${currentUser.mobile}` : 'Citizen'} • {currentUser?.taluka || 'Vav-Tharad'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowProfileMenu(false)}
+                aria-label="Close menu"
+                className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-slate-500 tap-feedback active:scale-90"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="py-3 space-y-1.5 text-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  onOpenComplaints();
+                }}
+                className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-800 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+              >
+                <span>Track Active Grievances</span>
+                <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                  3
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  onFileComplaint('education');
+                }}
+                className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl bg-amber-50/80 hover:bg-amber-100 text-amber-900 font-bold flex items-center justify-between border border-amber-200/60 tap-feedback active:scale-98"
+              >
+                <span>Report School Issue</span>
+                <ChevronRight className="w-4 h-4 text-orange-500" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  onBackToEducation();
+                }}
+                className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-700 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+              >
+                <span>Back to Education Overview</span>
+                <Home className="w-4 h-4 text-slate-400" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  onBackToHome();
+                }}
+                className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl hover:bg-stone-50 font-semibold text-slate-700 flex items-center justify-between border border-slate-100 tap-feedback active:scale-98"
+              >
+                <span>Main District Portal</span>
+                <Home className="w-4 h-4 text-slate-400" />
+              </button>
+              {onLogout && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    onLogout();
+                  }}
+                  className="w-full text-left px-4 py-3 min-h-[48px] rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold flex items-center justify-between border border-rose-100 tap-feedback active:scale-98"
+                >
+                  <span>Log Out</span>
+                  <LogOut className="w-4 h-4 text-rose-500" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );
