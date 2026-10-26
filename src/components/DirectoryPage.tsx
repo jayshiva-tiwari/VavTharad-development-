@@ -523,7 +523,7 @@ export function DirectoryPage({
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900">
       {/* 1. Header with Vav-Tharad branding matching image_791c570a.png */}
-      <header className="sticky top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
+      <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: Emblem of India and Vav-Tharad branding */}
           <EmblemLogo href="/" />
@@ -629,7 +629,7 @@ export function DirectoryPage({
       </header>
 
       {/* 2. Main Page Content with School Campus Background & Flag Wave */}
-      <main className="relative flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+      <main className="relative flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 pt-[76px] sm:pt-[84px] pb-6 space-y-5 sm:space-y-6">
         {/* Top-Right Background: Wavy Indian Flag Ribbon + School Campus Building */}
         <div className="absolute top-2 right-4 sm:right-8 w-60 sm:w-80 md:w-[460px] h-28 sm:h-36 md:h-44 pointer-events-none opacity-20 sm:opacity-35 md:opacity-40 overflow-hidden select-none -z-0">
           <img

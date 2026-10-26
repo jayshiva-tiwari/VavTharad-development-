@@ -24,7 +24,7 @@ export function Header({
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
-    <header suppressHydrationWarning className="w-full bg-[#FBF9F5]/90 backdrop-blur-lg border-b border-stone-200/80 sticky top-0 z-40 transition-shadow duration-200 shadow-xs">
+    <header suppressHydrationWarning className="fixed top-0 left-0 right-0 z-40 w-full bg-[#FBF9F5]/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Ashoka Emblem & Vav Tharad Title */}
         <EmblemLogo />

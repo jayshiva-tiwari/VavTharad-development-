@@ -130,7 +130,7 @@ export default function HomePage() {
         onOpenComplaints={() => setIsTrackerModalOpen(true)}
       />
 
-      <main suppressHydrationWarning className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 pb-28 md:pb-8 flex flex-col justify-between">
+      <main suppressHydrationWarning className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-[76px] sm:pt-[84px] pb-28 md:pb-8 flex flex-col justify-between">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-start">
           {/* ================= LEFT COLUMN ================= */}
           <div className="lg:col-span-5 flex flex-col relative">

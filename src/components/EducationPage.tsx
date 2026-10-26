@@ -136,7 +136,7 @@ export function EducationPage({
   return (
     <div className="min-h-[100dvh] pb-24 md:pb-0 flex flex-col justify-between bg-[#F4F7FC]/80 text-slate-900 overflow-x-hidden">
       {/* 1. Header with panoramic background matching image_32066463.png */}
-      <header className="sticky top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
+      <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs overflow-hidden">
         {/* Subtle Panoramic Heritage Temple & Landscape in Header Center */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35 sm:opacity-50">
           <img
@@ -411,7 +411,7 @@ export function EducationPage({
       </header>
 
       {/* 2. Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-5">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-[76px] sm:pt-[84px] pb-6 space-y-5">
         {/* Breadcrumbs: Home / Education */}
         <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-500">
           <button
